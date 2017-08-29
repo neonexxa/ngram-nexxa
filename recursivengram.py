@@ -1,7 +1,8 @@
 import numpy as np
+import json
 
-PATH = '../Python/nltk-scikitlearn/Research/rawSAX/rajb.txt'
-graminput = 5
+# PATH = '../Python/nltk-scikitlearn/Research/rawSAX/rajb.txt'
+
 
 def nlabel(x):
     return {
@@ -25,33 +26,37 @@ def ngrams(maininput, n):
         g = ' '.join(input[i:i+n])
         output.setdefault(g, 0)
         output[g] += 1
-    print (nlabel(n) + str(output))
+    # print (nlabel(n) + str(output))
+    # print (output)
+    values_json = json.dumps(output, sort_keys=True, separators=(',', ':'))
+    print(nlabel(n) + str(values_json))
     if n!=1 :
         return ngrams(maininput, n-1)
 
 
-with open(PATH, 'rb') as f:
-    # ngrams(f.read(), 10)
-    dataset = f.readlines()
-    # dataset = f.read()
-    # print(''.join(map(bytes.decode, dataset)))
-    # strdataset = dataset.replace('\n', '')
-    # print (strdataset)
-    fulltext = ''
-    for line in map(bytes.decode, dataset):
-        removenewline = line.replace('\n', '') #remove newline
-        cleantext = removenewline.replace('\r','')  #remove windows indicator
-        singletext = cleantext.replace(' ', '')  #remove space
-        fulltext+=str(singletext)
-    print (fulltext)
-    print(ngrams(fulltext,graminput))
-    # print(map(bytes.decode, dataset))
-    # strdataset = '\n'.join([line.strip() for line in map(bytes.decode, dataset)])
-    # print(ngrams(strdataset, 10))
-    # haha = np.concatenate(dataset).astype(None)
-    # print(haha)
-    # for line in dataset:
-    #     year = line.split()
-    #     print(year)
-    #     print(len(line))
+def getfile(PATH,graminput):
+    with open(PATH, 'rb') as f:
+        # ngrams(f.read(), 10)
+        dataset = f.readlines()
+        # dataset = f.read()
+        # print(''.join(map(bytes.decode, dataset)))
+        # strdataset = dataset.replace('\n', '')
+        # print (strdataset)
+        fulltext = ''
+        for line in map(bytes.decode, dataset):
+            removenewline = line.replace('\n', '') #remove newline
+            cleantext = removenewline.replace('\r','')  #remove windows indicator
+            singletext = cleantext.replace(' ', '')  #remove space
+            fulltext+=str(singletext)
+        # print (fulltext)
+        ngrams(fulltext,graminput)
+        # print(map(bytes.decode, dataset))
+        # strdataset = '\n'.join([line.strip() for line in map(bytes.decode, dataset)])
+        # print(ngrams(strdataset, 10))
+        # haha = np.concatenate(dataset).astype(None)
+        # print(haha)
+        # for line in dataset:
+        #     year = line.split()
+        #     print(year)
+        #     print(len(line))
 

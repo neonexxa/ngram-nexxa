@@ -1,0 +1,17 @@
+c c c c d c c b c d c c 
+b c c b c b b c c d e c 
+b b c d d c b b c d d c 
+b c b c c c c d d b d c 
+b b c c c c c c d d d c 
+c b c c d c c c d d c b 
+b b c c d c b c c d c c 
+b c c c c c c c c d d c 
+b c c d c b c c d d c c 
+b c c c d c b c d d c c 
+b b c d c c b c b d d c 
+b c c c c c c c c d d c 
+b b b b c c c d c d d c 
+b c d c c b b c c c c c 
+c c d d c c b c c c c c 
+c c c d c b b b c d d c 
+
