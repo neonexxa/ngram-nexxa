@@ -29,34 +29,48 @@ def ngrams(maininput, n):
     # print (nlabel(n) + str(output))
     # print (output)
     values_json = json.dumps(output, sort_keys=True, separators=(',', ':'))
-    print(nlabel(n) + str(values_json))
-    if n!=1 :
-        return ngrams(maininput, n-1)
+    # print(nlabel(n) + str(values_json))
+    return values_json
+    # if want recursive
+    # if n!=1 :
+    #     return ngrams(maininput, n-1)
 
 
-def getfile(PATH,graminput):
-    with open(PATH, 'rb') as f:
-        # ngrams(f.read(), 10)
-        dataset = f.readlines()
-        # dataset = f.read()
-        # print(''.join(map(bytes.decode, dataset)))
-        # strdataset = dataset.replace('\n', '')
-        # print (strdataset)
-        fulltext = ''
-        for line in map(bytes.decode, dataset):
-            removenewline = line.replace('\n', '') #remove newline
+def getfile(PATH,graminput,byyear,vline):
+    print(byyear)
+    if (byyear):
+        with open(PATH, 'r') as f:
+            line = f.readlines()
+            print(vline)
+            pretext = line[vline]
+            fulltext = ''
+            removenewline = pretext.replace('\n', '') #remove newline
             cleantext = removenewline.replace('\r','')  #remove windows indicator
             singletext = cleantext.replace(' ', '')  #remove space
             fulltext+=str(singletext)
-        # print (fulltext)
-        ngrams(fulltext,graminput)
-        # print(map(bytes.decode, dataset))
-        # strdataset = '\n'.join([line.strip() for line in map(bytes.decode, dataset)])
-        # print(ngrams(strdataset, 10))
-        # haha = np.concatenate(dataset).astype(None)
-        # print(haha)
-        # for line in dataset:
-        #     year = line.split()
-        #     print(year)
-        #     print(len(line))
-
+            return ngrams(fulltext,graminput)
+    else:
+        with open(PATH, 'rb') as f:
+            # ngrams(f.read(), 10)
+            dataset = f.readlines()
+            # dataset = f.read()
+            # print(''.join(map(bytes.decode, dataset)))
+            # strdataset = dataset.replace('\n', '')
+            # print (strdataset)
+            fulltext = ''
+            for line in map(bytes.decode, dataset):
+                removenewline = line.replace('\n', '') #remove newline
+                cleantext = removenewline.replace('\r','')  #remove windows indicator
+                singletext = cleantext.replace(' ', '')  #remove space
+                fulltext+=str(singletext)
+            # print (fulltext)
+            ngrams(fulltext,graminput)
+            # print(map(bytes.decode, dataset))
+            # strdataset = '\n'.join([line.strip() for line in map(bytes.decode, dataset)])
+            # print(ngrams(strdataset, 10))
+            # haha = np.concatenate(dataset).astype(None)
+            # print(haha)
+            # for line in dataset:
+            #     year = line.split()
+            #     print(year)
+            #     print(len(line))
