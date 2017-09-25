@@ -1,166 +1,129 @@
-from sklearn.datasets import load_iris
-from sklearn.model_selection import cross_val_score
+import matplotlib.pyplot as plt 
+
+from sklearn import datasets
+from sklearn import svm
+from sklearn import tree
 from sklearn.tree import DecisionTreeClassifier
 import numpy as np
 from sklearn.metrics import accuracy_score
-import graphviz 
-from sklearn import tree
-# clf = DecisionTreeClassifier(random_state=0)
+import argparse
+from sklearn.naive_bayes import GaussianNB
+from sklearn.ensemble import RandomForestClassifier
+from sklearn.ensemble import BaggingClassifier
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.cluster import KMeans
+from time import time
 
-X = np.c_[(0, 0, 0, 5, 5, 0, 0, 0, 2, 7, 5, 0, 1, 3, 4, 1, 0, 0, 0, 0),
-		  (0, 0, 0, 5, 3, 0, 0, 0, 1, 13, 3, 0, 0, 2, 5, 1, 0, 0, 0, 0),
-		  (0, 0, 0, 4, 5, 1, 0, 0, 3, 8, 3, 0, 0, 3, 3, 2, 0, 0, 1, 0),
-		  (0, 1, 1, 0, 4, 0, 0, 0, 2, 11, 5, 0, 0, 4, 3, 1, 0, 1, 0, 0),
-		  (0, 0, 0, 4, 5, 3, 0, 0, 5, 4, 1, 1, 1, 3, 5, 0, 0, 0, 1, 0),
-		  (0, 0, 0, 2, 5, 1, 0, 0, 3, 15, 2, 0, 0, 2, 2, 1, 0, 0, 0, 0),
-		  (1, 0, 0, 9, 2, 0, 0, 1, 1, 4, 5, 0, 0, 4, 6, 0, 0, 0, 0, 0),
-		  (0, 0, 0, 2, 4, 0, 0, 0, 4, 14, 3, 0, 0, 2, 4, 0, 0, 0, 0, 0),
-		  (0, 0, 0, 1, 4, 0, 0, 0, 2, 16, 4, 0, 1, 2, 3, 0, 0, 0, 0, 0),
-		  (0, 0, 0, 6, 3, 1, 0, 0, 2, 8, 4, 0, 2, 4, 3, 0, 0, 0, 0, 0),
-		  (1, 0, 1, 2, 2, 2, 0, 0, 1, 12, 3, 0, 0, 4, 5, 0, 0, 0, 0, 0),
-		  (0, 0, 0, 4, 3, 1, 1, 0, 4, 12, 2, 0, 1, 2, 2, 0, 0, 0, 1, 0),
-		  (0, 0, 0, 2, 3, 2, 0, 0, 5, 11, 2, 0, 1, 3, 2, 1, 0, 0, 1, 0),
-		  (0, 0, 0, 3, 5, 0, 0, 0, 3, 13, 2, 1, 0, 1, 3, 0, 0, 0, 1, 1),
-		  (0, 0, 0, 1, 3, 1, 0, 0, 4, 16, 2, 0, 0, 3, 3, 0, 0, 0, 0, 0),
-		  (0, 0, 0, 2, 3, 0, 0, 0, 3, 14, 5, 0, 0, 4, 2, 0, 0, 0, 0, 0),
-		  (0, 0, 0, 2, 4, 0, 0, 0, 2, 16, 4, 0, 1, 3, 1, 0, 0, 0, 0, 0),
-		  (0, 0, 0, 4, 3, 0, 0, 0, 3, 15, 4, 0, 0, 2, 1, 1, 0, 0, 0, 0),
-		  (0, 0, 0, 1, 2, 0, 0, 0, 3, 20, 4, 0, 0, 2, 0, 1, 0, 0, 0, 0),
-		  (0, 0, 0, 0, 4, 1, 0, 0, 4, 15, 3, 0, 1, 3, 2, 0, 0, 0, 0, 0),
-		  (0, 0, 0, 1, 5, 0, 0, 0, 3, 16, 3, 1, 0, 2, 1, 0, 0, 0, 0, 1),
-		  (0, 0, 0, 0, 5, 1, 0, 0, 5, 12, 3, 0, 1, 3, 1, 1, 1, 0, 0, 0),
-		  (0, 0, 0, 0, 3, 3, 0, 0, 4, 17, 2, 0, 1, 3, 0, 0, 0, 0, 0, 0),
-		  (0, 0, 0, 0, 5, 0, 0, 0, 1, 18, 4, 1, 2, 2, 0, 0, 0, 0, 0, 0),
-		  (1, 0, 0, 2, 5, 1, 1, 0, 5, 6, 4, 0, 2, 2, 3, 0, 0, 0, 0, 0),
-		  (0, 0, 0, 0, 2, 2, 0, 0, 2, 21, 2, 0, 2, 2, 0, 0, 0, 0, 0, 0),
-		  (0, 0, 0, 1, 4, 0, 0, 0, 3, 20, 2, 0, 0, 2, 0, 0, 0, 1, 0, 0),
-		  (0, 0, 0, 0, 5, 0, 0, 0, 2, 22, 2, 0, 2, 0, 0, 0, 0, 0, 0, 0),
-		  (0, 0, 0, 0, 2, 1, 0, 0, 2, 22, 2, 0, 1, 2, 1, 0, 0, 0, 0, 0),
-		  (0, 0, 0, 2, 4, 1, 0, 0, 3, 14, 3, 0, 1, 4, 0, 0, 1, 0, 0, 0),
-		  (0, 0, 0, 3, 3, 3, 0, 0, 4, 7, 3, 0, 3, 4, 3, 0, 0, 0, 0, 0),
-		  (1, 0, 0, 0, 5, 0, 0, 1, 2, 13, 5, 0, 1, 3, 0, 1, 0, 1, 0, 0),
-		  (0, 0, 0, 4, 6, 0, 0, 0, 6, 12, 1, 2, 1, 1, 0, 0, 0, 0, 0, 0),
-		  (0, 0, 0, 2, 7, 0, 0, 0, 6, 12, 3, 0, 0, 1, 0, 0, 2, 0, 0, 0),
-		  (0, 0, 0, 0, 2, 2, 0, 0, 4, 23, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0),
-		  (0, 0, 0, 6, 2, 1, 0, 0, 3, 13, 2, 0, 0, 2, 1, 1, 0, 1, 1, 0),
-		  (0, 0, 0, 7, 5, 0, 0, 0, 5, 5, 4, 0, 0, 2, 2, 1, 0, 2, 0, 0),
-		  (0, 0, 0, 3, 4, 2, 0, 0, 2, 14, 2, 1, 3, 2, 0, 0, 0, 0, 0, 0),
-		  (0, 2, 0, 0, 4, 1, 0, 2, 3, 13, 2, 1, 1, 2, 0, 0, 0, 2, 0, 0),
-		  (0, 0, 0, 4, 3, 2, 0, 0, 4, 10, 2, 0, 2, 3, 3, 0, 0, 0, 0, 0),
-		  (0, 0, 0, 6, 5, 1, 0, 0, 2, 9, 3, 1, 1, 2, 0, 1, 2, 0, 0, 0),
-		  (1, 0, 0, 2, 6, 0, 0, 1, 3, 9, 3, 1, 1, 3, 2, 0, 0, 0, 1, 0),
-		  (0, 0, 0, 3, 4, 1, 0, 0, 5, 10, 3, 1, 1, 3, 1, 0, 0, 0, 1, 0),
-		  (0, 0, 0, 3, 5, 0, 0, 0, 4, 12, 3, 0, 0, 4, 0, 0, 0, 1, 1, 0),
-		  (1, 0, 0, 4, 4, 0, 0, 1, 3, 6, 4, 0, 0, 6, 2, 0, 0, 0, 1, 1),
-		  (0, 0, 0, 11, 3, 1, 0, 0, 4, 5, 2, 0, 0, 3, 0, 0, 0, 2, 0, 2),
-		  (1, 0, 1, 6, 2, 0, 0, 0, 3, 10, 3, 1, 0, 4, 1, 0, 0, 0, 1, 0),
-		  (0, 2, 1, 3, 5, 0, 0, 1, 5, 6, 3, 1, 0, 3, 1, 0, 1, 0, 1, 0),
-		  (0, 1, 1, 1, 2, 0, 0, 0, 4, 17, 2, 0, 0, 2, 2, 0, 0, 1, 0, 0),
-		  (0, 0, 0, 3, 2, 1, 1, 0, 4, 15, 1, 0, 0, 2, 2, 1, 0, 1, 0, 0),
-		  (0, 0, 0, 4, 5, 0, 0, 0, 4, 13, 3, 0, 0, 1, 0, 1, 0, 2, 0, 0),
-		  (0, 0, 0, 7, 3, 1, 0, 0, 3, 10, 4, 0, 1, 2, 1, 1, 0, 0, 0, 0),
-		  (0, 0, 0, 3, 2, 4, 0, 0, 2, 12, 2, 0, 3, 3, 2, 0, 0, 0, 0, 0),
-		  (0, 0, 0, 8, 3, 0, 2, 0, 4, 10, 2, 0, 1, 1, 0, 0, 0, 2, 0, 0),
-		  (0, 0, 0, 4, 3, 0, 1, 0, 4, 6, 4, 2, 1, 4, 1, 0, 0, 2, 1, 0),
-		  (0, 0, 0, 9, 1, 1, 1, 0, 3, 3, 2, 1, 1, 3, 4, 1, 0, 2, 1, 0),
-		  (0, 0, 0, 3, 3, 2, 1, 0, 4, 9, 2, 2, 1, 3, 0, 0, 2, 1, 0, 0),
-		  (0, 0, 0, 3, 3, 3, 0, 0, 4, 12, 1, 1, 3, 2, 0, 0, 0, 1, 0, 0),
-		  (0, 0, 0, 4, 3, 2, 0, 0, 3, 6, 4, 0, 2, 4, 3, 1, 0, 0, 1, 0),
-		  (0, 0, 0, 5, 4, 1, 1, 0, 2, 6, 3, 1, 2, 2, 4, 0, 1, 1, 0, 0),
-		  (0, 0, 0, 3, 4, 1, 0, 0, 5, 6, 4, 0, 1, 4, 5, 0, 0, 0, 0, 0),
-		  (0, 0, 0, 6, 6, 0, 0, 0, 4, 8, 2, 0, 1, 1, 3, 1, 0, 1, 0, 0),
-		  (0, 0, 0, 4, 4, 1, 1, 0, 5, 6, 3, 0, 0, 4, 4, 0, 1, 0, 0, 0),
-		  (0, 0, 0, 5, 6, 2, 0, 0, 4, 5, 3, 0, 3, 1, 1, 1, 0, 1, 0, 1),
-		  (0, 0, 0, 5, 2, 2, 1, 0, 3, 5, 4, 1, 1, 5, 2, 0, 0, 2, 0, 0),
-		  (0, 0, 0, 4, 3, 4, 0, 0, 3, 5, 3, 1, 2, 4, 3, 0, 1, 0, 0, 0),
-		  (0, 0, 0, 3, 5, 0, 0, 0, 3, 10, 6, 0, 2, 3, 0, 1, 0, 0, 0, 0),
-		  (0, 0, 0, 0, 4, 0, 0, 0, 4, 15, 4, 1, 0, 4, 0, 0, 0, 0, 1, 0),
-		  (0, 0, 0, 2, 4, 0, 0, 0, 3, 17, 3, 0, 0, 2, 2, 0, 0, 0, 0, 0),
-		  (0, 0, 0, 0, 4, 2, 0, 0, 4, 13, 4, 0, 2, 2, 0, 1, 0, 1, 0, 0),
-		  (0, 0, 0, 1, 2, 1, 0, 0, 4, 15, 4, 0, 0, 4, 2, 0, 0, 0, 0, 0),
-		  (0, 0, 0, 1, 5, 2, 0, 0, 5, 8, 5, 0, 1, 5, 1, 0, 0, 0, 0, 0),
-		  (0, 0, 0, 2, 4, 1, 0, 0, 4, 14, 2, 0, 1, 2, 3, 0, 0, 0, 0, 0),
-		  (0, 0, 0, 1, 5, 3, 0, 0, 4, 5, 5, 0, 3, 5, 2, 0, 0, 0, 0, 0),
-		  (0, 0, 0, 3, 5, 0, 0, 0, 4, 10, 4, 1, 0, 5, 0, 0, 0, 1, 0, 0),
-		  (0, 0, 0, 0, 6, 1, 0, 0, 6, 10, 3, 0, 1, 5, 1, 0, 0, 0, 0, 0),
-		  (0, 0, 0, 2, 6, 0, 0, 0, 3, 8, 5, 1, 2, 2, 3, 0, 0, 1, 0, 0),
-		  (0, 0, 0, 1, 5, 1, 0, 0, 4, 12, 4, 0, 1, 2, 1, 1, 0, 0, 1, 0),
-		  (0, 0, 0, 1, 2, 3, 0, 0, 3, 12, 4, 0, 3, 4, 1, 0, 0, 0, 0, 0),
-		  (0, 0, 0, 3, 4, 0, 0, 0, 3, 12, 4, 1, 0, 3, 2, 0, 0, 0, 1, 0),
-		  (0, 0, 0, 2, 3, 0, 0, 0, 3, 14, 5, 0, 1, 4, 1, 0, 0, 0, 0, 0),
-		  (0, 0, 0, 2, 5, 1, 0, 0, 5, 10, 4, 0, 1, 4, 1, 0, 0, 0, 0, 0),
-		  (0, 0, 0, 0, 5, 1, 0, 0, 4, 10, 5, 0, 2, 3, 1, 1, 0, 1, 0, 0),
-		  (0, 0, 0, 3, 4, 0, 0, 0, 4, 13, 5, 0, 1, 2, 0, 1, 0, 0, 0, 0),
-		  (0, 0, 0, 1, 4, 1, 0, 0, 4, 14, 4, 0, 0, 4, 1, 0, 0, 0, 0, 0),
-		  (0, 0, 0, 1, 3, 0, 0, 0, 2, 19, 4, 0, 0, 3, 1, 0, 0, 0, 0, 0),
-		  (0, 0, 0, 3, 3, 1, 0, 0, 3, 12, 4, 0, 1, 3, 1, 1, 0, 1, 0, 0),
-		  (0, 0, 0, 1, 3, 1, 0, 0, 4, 14, 5, 0, 1, 3, 0, 1, 0, 0, 0, 0),
-		  (0, 0, 0, 0, 3, 3, 0, 0, 5, 14, 3, 0, 1, 4, 0, 0, 0, 0, 0, 0),
-		  (0, 0, 0, 1, 6, 1, 0, 0, 4, 8, 5, 0, 1, 5, 2, 0, 0, 0, 0, 0),
-		  (0, 0, 0, 2, 3, 0, 0, 0, 4, 11, 6, 0, 0, 4, 3, 0, 0, 0, 0, 0),
-		  (0, 0, 0, 2, 5, 1, 0, 0, 4, 8, 4, 1, 2, 4, 1, 0, 0, 0, 1, 0),
-		  (0, 0, 0, 3, 4, 0, 0, 0, 3, 12, 5, 0, 0, 5, 1, 0, 0, 0, 0, 0),
-		  (0, 0, 0, 4, 3, 1, 0, 0, 2, 14, 3, 0, 1, 4, 1, 0, 0, 0, 0, 0),
-		  (0, 0, 0, 1, 6, 0, 0, 0, 3, 11, 5, 1, 2, 3, 0, 0, 0, 0, 1, 0),
-		  (0, 0, 0, 5, 2, 1, 0, 0, 4, 15, 2, 0, 0, 2, 0, 1, 0, 0, 1, 0),
-		  (0, 0, 0, 3, 4, 2, 0, 0, 5, 9, 3, 1, 2, 3, 0, 0, 0, 1, 0, 0),
-		  (0, 0, 0, 3, 3, 1, 0, 0, 2, 13, 4, 0, 1, 3, 3, 0, 0, 0, 0, 0),
-		  (0, 0, 0, 2, 3, 0, 0, 0, 3, 17, 4, 0, 0, 4, 0, 0, 0, 0, 0, 0),
-		  (0, 0, 0, 1, 4, 1, 0, 0, 4, 14, 2, 1, 1, 2, 2, 0, 1, 0, 0, 0),
-		  (0, 0, 0, 0, 5, 2, 0, 0, 6, 9, 3, 0, 1, 3, 2, 1, 0, 1, 0, 0)].T
-Y = ['CH'] * 17 + ['JB'] * 18 + ['KCH'] * 17 + ['LGK'] * 14 + ['PJ'] * 17 + ['SBG'] * 18
+from sklearn import metrics
+from sklearn.cluster import KMeans
+from sklearn.datasets import load_digits
+from sklearn.decomposition import PCA
+from sklearn.preprocessing import scale
 
-test = np.c_[(1, 0, 1, 2, 2, 2, 0, 0, 1, 12, 3, 0, 0, 4, 5, 0, 0, 0, 0, 0),
-			   (0, 0, 0, 4, 3, 1, 1, 0, 4, 12, 2, 0, 1, 2, 2, 0, 0, 0, 1, 0),
-			   (0, 0, 0, 2, 3, 2, 0, 0, 5, 11, 2, 0, 1, 3, 2, 1, 0, 0, 1, 0),
-			   (0, 0, 0, 3, 5, 0, 0, 0, 3, 13, 2, 1, 0, 1, 3, 0, 0, 0, 1, 1),
-			   (0, 0, 0, 1, 3, 1, 0, 0, 4, 16, 2, 0, 0, 3, 3, 0, 0, 0, 0, 0),
-			   (0, 0, 0, 2, 3, 0, 0, 0, 3, 14, 5, 0, 0, 4, 2, 0, 0, 0, 0, 0),
-			   (0, 0, 0, 2, 4, 0, 0, 0, 2, 16, 4, 0, 1, 3, 1, 0, 0, 0, 0, 0),
-			   (0, 0, 0, 0, 5, 0, 0, 0, 2, 22, 2, 0, 2, 0, 0, 0, 0, 0, 0, 0),
-			   (0, 0, 0, 0, 2, 1, 0, 0, 2, 22, 2, 0, 1, 2, 1, 0, 0, 0, 0, 0),
-			   (0, 0, 0, 2, 4, 1, 0, 0, 3, 14, 3, 0, 1, 4, 0, 0, 1, 0, 0, 0),
-			   (0, 0, 0, 3, 3, 3, 0, 0, 4, 7, 3, 0, 3, 4, 3, 0, 0, 0, 0, 0),
-			   (1, 0, 0, 0, 5, 0, 0, 1, 2, 13, 5, 0, 1, 3, 0, 1, 0, 1, 0, 0),
-			   (0, 0, 0, 4, 6, 0, 0, 0, 6, 12, 1, 2, 1, 1, 0, 0, 0, 0, 0, 0),
-			   (0, 0, 0, 2, 7, 0, 0, 0, 6, 12, 3, 0, 0, 1, 0, 0, 2, 0, 0, 0),
-			   (0, 0, 0, 0, 2, 2, 0, 0, 4, 23, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0),
-			   (0, 0, 0, 11, 3, 1, 0, 0, 4, 5, 2, 0, 0, 3, 0, 0, 0, 2, 0, 2),
-			   (1, 0, 1, 6, 2, 0, 0, 0, 3, 10, 3, 1, 0, 4, 1, 0, 0, 0, 1, 0),
-			   (0, 2, 1, 3, 5, 0, 0, 1, 5, 6, 3, 1, 0, 3, 1, 0, 1, 0, 1, 0),
-			   (0, 1, 1, 1, 2, 0, 0, 0, 4, 17, 2, 0, 0, 2, 2, 0, 0, 1, 0, 0),
-			   (0, 0, 0, 3, 2, 1, 1, 0, 4, 15, 1, 0, 0, 2, 2, 1, 0, 1, 0, 0),
-			   (0, 0, 0, 4, 5, 0, 0, 0, 4, 13, 3, 0, 0, 1, 0, 1, 0, 2, 0, 0),
-			   (0, 0, 0, 7, 3, 1, 0, 0, 3, 10, 4, 0, 1, 2, 1, 1, 0, 0, 0, 0),
-			   (0, 0, 0, 2, 4, 0, 0, 0, 5, 13, 2, 0, 0, 2, 3, 1, 0, 1, 0, 0),
-			   (0, 0, 0, 4, 3, 0, 0, 0, 3, 13, 3, 0, 0, 3, 4, 0, 0, 0, 0, 0),
-			   (0, 0, 0, 5, 4, 0, 0, 0, 4, 9, 4, 0, 0, 3, 1, 1, 0, 1, 0, 1),
-			   (0, 0, 0, 6, 3, 1, 0, 0, 4, 5, 3, 1, 0, 4, 5, 0, 0, 1, 0, 0),
-			   (0, 0, 0, 5, 3, 2, 0, 0, 4, 5, 3, 0, 0, 5, 6, 0, 0, 0, 0, 0),
-			   (0, 0, 0, 0, 6, 1, 0, 0, 6, 10, 3, 0, 1, 5, 1, 0, 0, 0, 0, 0),
-			   (0, 0, 0, 2, 6, 0, 0, 0, 3, 8, 5, 1, 2, 2, 3, 0, 0, 1, 0, 0),
-			   (0, 0, 0, 1, 5, 1, 0, 0, 4, 12, 4, 0, 1, 2, 1, 1, 0, 0, 1, 0),
-			   (0, 0, 0, 1, 2, 3, 0, 0, 3, 12, 4, 0, 3, 4, 1, 0, 0, 0, 0, 0),
-			   (0, 0, 0, 3, 4, 0, 0, 0, 3, 12, 4, 1, 0, 3, 2, 0, 0, 0, 1, 0),
-			   (0, 0, 0, 2, 3, 0, 0, 0, 3, 14, 5, 0, 1, 4, 1, 0, 0, 0, 0, 0),
-			   (0, 0, 0, 2, 5, 1, 0, 0, 5, 10, 4, 0, 1, 4, 1, 0, 0, 0, 0, 0),
-			   (0, 0, 0, 0, 5, 1, 0, 0, 4, 10, 5, 0, 2, 3, 1, 1, 0, 1, 0, 0),
-			   (0, 0, 0, 4, 3, 1, 0, 0, 2, 14, 3, 0, 1, 4, 1, 0, 0, 0, 0, 0),
-			   (0, 0, 0, 1, 6, 0, 0, 0, 3, 11, 5, 1, 2, 3, 0, 0, 0, 0, 1, 0),
-			   (0, 0, 0, 5, 2, 1, 0, 0, 4, 15, 2, 0, 0, 2, 0, 1, 0, 0, 1, 0),
-			   (0, 0, 0, 3, 4, 2, 0, 0, 5, 9, 3, 1, 2, 3, 0, 0, 0, 1, 0, 0),
-			   (0, 0, 0, 3, 3, 1, 0, 0, 2, 13, 4, 0, 1, 3, 3, 0, 0, 0, 0, 0),
-			   (0, 0, 0, 2, 3, 0, 0, 0, 3, 17, 4, 0, 0, 4, 0, 0, 0, 0, 0, 0),
-			   (0, 0, 0, 1, 4, 1, 0, 0, 4, 14, 2, 1, 1, 2, 2, 0, 1, 0, 0, 0),
-			   (0, 0, 0, 0, 5, 2, 0, 0, 6, 9, 3, 0, 1, 3, 2, 1, 0, 1, 0, 0)].T
+import pickle
 
-y_true = ['CH'] * 7 + ['JB'] * 8 + ['KCH'] * 7 + ['LGK'] * 5 + ['PJ'] * 8 + ['SBG'] * 8
+ap = argparse.ArgumentParser()
+ap.add_argument("-ds", "--dataset", required = True, help = "copy.txt")
+ap.add_argument("-ts", "--testset", required = True, help = "textcopy.txt")
+# ap.add_argument("-at", "--algotype", required = True, help = "dtc/dtr/svm/gnb/erfc/bagc/model")
+ap.add_argument("-m", "--model", required = False, help = "dtc/dtr/svm/gnb/erfc/bagc")
+args = vars(ap.parse_args())
+
+lines_train = open(args["dataset"], 'r').readlines()
+datasets = []
+for n in lines_train:
+	datasets.append(list(map(int, n.split(' '))))
+
+lines_test = open(args["testset"], 'r').readlines()
+testset = []
+for m in lines_test:
+	testset.append(list(map(int, m.split(' '))))
+
+X = datasets[:-1]
+target = datasets[-1]
+test = testset[:-1]
+test_target = testset[-1]
+
+data = scale(X)
+n_samples, n_features = data.shape
+n_digits = len(np.unique(target))
+labels = target
+
+sample_size = 300
+
+print("n_digits: %d, \t n_samples %d, \t n_features %d"
+      % (n_digits, n_samples, n_features))
 
 
+print(82 * '_')
+print('init\t\ttime\tinertia\thomo\tcompl\tv-meas\tARI\tAMI\tsilhouette')
 
-clf = DecisionTreeClassifier(random_state=0)
-clf = clf.fit(X, Y)
-y_pred = clf.predict(test)
-print('Prediction : ',y_pred)
-print('Actual value : ',y_true)
-print('Testing Validation Accuracy : ',accuracy_score(y_true, y_pred))
+
+def bench_k_means(estimator, name, data):
+    t0 = time()
+    estimator.fit(data)
+    print('%-9s\t%.2fs\t%i\t%.3f\t%.3f\t%.3f\t%.3f\t%.3f\t%.3f'
+          % (name, (time() - t0), estimator.inertia_,
+             metrics.homogeneity_score(labels, estimator.labels_),
+             metrics.completeness_score(labels, estimator.labels_),
+             metrics.v_measure_score(labels, estimator.labels_),
+             metrics.adjusted_rand_score(labels, estimator.labels_),
+             metrics.adjusted_mutual_info_score(labels,  estimator.labels_),
+             metrics.silhouette_score(data, estimator.labels_,
+                                      metric='euclidean',
+                                      sample_size=sample_size)))
+
+bench_k_means(KMeans(init='k-means++', n_clusters=n_digits, n_init=10),
+              name="k-means++", data=data)
+
+bench_k_means(KMeans(init='random', n_clusters=n_digits, n_init=10),
+              name="random", data=data)
+
+# in this case the seeding of the centers is deterministic, hence we run the
+# kmeans algorithm only once with n_init=1
+pca = PCA(n_components=n_digits).fit(data)
+bench_k_means(KMeans(init=pca.components_, n_clusters=n_digits, n_init=1),
+              name="PCA-based",
+              data=data)
+print(82 * '_')
+
+# #############################################################################
+# Visualize the results on PCA-reduced data
+
+reduced_data = PCA(n_components=2).fit_transform(data)
+kmeans = KMeans(init='k-means++', n_clusters=n_digits, n_init=10)
+kmeans.fit(reduced_data)
+
+# Step size of the mesh. Decrease to increase the quality of the VQ.
+h = .02     # point in the mesh [x_min, x_max]x[y_min, y_max].
+
+# Plot the decision boundary. For that, we will assign a color to each
+x_min, x_max = reduced_data[:, 0].min() - 1, reduced_data[:, 0].max() + 1
+y_min, y_max = reduced_data[:, 1].min() - 1, reduced_data[:, 1].max() + 1
+xx, yy = np.meshgrid(np.arange(x_min, x_max, h), np.arange(y_min, y_max, h))
+
+# Obtain labels for each point in mesh. Use last trained model.
+Z = kmeans.predict(np.c_[xx.ravel(), yy.ravel()])
+
+# Put the result into a color plot
+Z = Z.reshape(xx.shape)
+plt.figure(1)
+plt.clf()
+plt.imshow(Z, interpolation='nearest',
+           extent=(xx.min(), xx.max(), yy.min(), yy.max()),
+           cmap=plt.cm.Paired,
+           aspect='auto', origin='lower')
+
+plt.plot(reduced_data[:, 0], reduced_data[:, 1], 'k.', markersize=2)
+# Plot the centroids as a white X
+centroids = kmeans.cluster_centers_
+plt.scatter(centroids[:, 0], centroids[:, 1],
+            marker='x', s=169, linewidths=3,
+            color='w', zorder=10)
+plt.title('K-means clustering on the digits dataset (PCA-reduced data)\n'
+          'Centroids are marked with white cross')
+plt.xlim(x_min, x_max)
+plt.ylim(y_min, y_max)
+plt.xticks(())
+plt.yticks(())
+plt.show()

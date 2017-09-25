@@ -10,7 +10,7 @@ ap.add_argument("-tr", "--train", required = False, help = "yes/no")
 args = vars(ap.parse_args())
 
 loc = ['ch','jb','kch','lgk','pj','sbg']
-locname = ['cheras','johor baru','kucing','lgk','pj','sbg']
+locname = ['cam','johor baru','kucing','lgk','pj','sbg']
 datasettype = ['ra','rf','tem']
 datasetname = ['Rain amount','Rain Frequency','Temperature']
 
