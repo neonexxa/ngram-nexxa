@@ -1,0 +1,45 @@
+CDB1012	Health, Safety and Environment	2.00		2014	S2	A	UG
+GDB1023	Economics	3.00		2014	S2	A	UG
+GDB1033	Management and Organizational Behavior	3.00		2014	S1	A	UG
+GDB2013	Business Accounting	3.00		2014	S2	A	UG
+GDB2043	Principles of Marketing	3.00		2015	S2	A	UG
+GDB2053	Principles of Finance	3.00		2015	S1	A	UG
+GDB3033	Corporate Finance	3.00		2016	S1	A	UG
+GDB3033	Corporate Finance	3.00	Elective	2017	S3	A	UG
+GDB3043	International Financial Management	3.00		2016	S1	A	UG
+GDB3043	International Financial Management	3.00		2016	S2	A	UG
+GDB3053	Investment and Portfolio Management	3.00	Elective	2017	S2	A	UG
+GDB3063	Personal Financial Management	3.00		2015	S2	A	UG
+GDB3073	Human Resource Management	3.00	Elective	2017	S3	A	UG
+HDB1012	Community Engagement Project	2.00	Elective	2017	S3	A	UG
+HDB2033	Professional Communication Skills	3.00		2015	S2	A	UG
+HDB2073	Innovation and Creativity Skills	3.00		2015	S2	A	UG
+HDB2113	Dakwah in Malaysia	3.00		2016	S1	A	UG
+IDB3037	Industrial Training	7.00		2016	S3	A	UG
+IDB3047	Industrial Project	7.00	Compulsory	2017	S1	A	UG
+KSP1031	Badminton	1.00		2015	S1	A	UG
+LDB1042	Academic Writing	2.00		2015	S1	A	UG
+MPU3113	Hubungan Etnik	3.00		2014	S1	A	UG
+MPU3123	Tamadun Islam dan Tamadun Asia (TITAS)	3.00		2014	S1	A	UG
+PDB1012	Introduction to Oil and Gas Industry and Sustainable Development	2.00		2014	S1	A	UG
+SDB1113	Data and Information Management	3.00		2014	S2	A	UG
+SDB1123	Systems Analysis and Design	3.00		2014	S2	A	UG
+SDB2133	Statistics and Empirical Method	3.00		2015	S2	A	UG
+SDB2133	Statistics and Empirical Method	3.00		2016	S2	A	UG
+SDB3082	Final Year Project I	2.00	Compulsory	2017	S2	A	UG
+SDB3113	Database Administration	3.00		2016	S1	A	UG
+SDB3113	Database Administration	3.00		2016	S2	A	UG
+SDB3123	IT Risk and Auditing	3.00		2016	S1	A	UG
+SDB3133	Introduction to Enterprise Resource Planning	3.00	Compulsory	2017	S2	A	UG
+SDB3144	Technopreneurship Team Project	4.00	Compulsory	2017	S2	A	UG
+SDB4104	Final Year Project II	4.00	Compulsory	2017	S3	A	UG
+SDB4313	Enterprise Architecture	3.00	Elective	2017	S3	A	UG
+SDB4323	Enterprise Information System Development	3.00	Elective	2017	S3	A	UG
+SDB4333	Business Intelligence	3.00	Elective	2017	S2	A	UG
+TDB1113	Structured Programming	3.00		2014	S1	A	UG
+TDB1123	Computer Organization	3.00		2014	S1	A	UG
+TDB1133	Data Communication and Networking	3.00		2014	S2	A	UG
+TDB2143	Web Application Development	3.00		2015	S1	A	UG
+TDB2153	Object-oriented Programming	3.00		2015	S1	A	UG
+TDB2163	Software Engineering	3.00		2015	S2	A	UG
+TDB3173	IT Project Management	3.00		2016	S1	A	UG

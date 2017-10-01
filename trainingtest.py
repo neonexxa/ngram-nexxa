@@ -282,19 +282,24 @@ elif(args["algotype"] == "bagc"):
 	# Close the pickle instances
 	model_name_pkl.close()
 elif(args["algotype"] == "km"):
-	clf = KMeans(n_clusters=6, random_state=0).fit(X)
+	clusternum = 6
+	clf = KMeans(n_clusters=clusternum, random_state=0).fit(X)
 	# clf_test = KMeans(n_clusters=6, random_state=0).fit(test)
 	y_pred = clf.predict(test)
 	centerc = clf.cluster_centers_
 	labels = clf.labels_
 	# labels_test = clf_test.labels_
-	print(centerc,labels)
-	print('Prediction : ',y_pred)
+	print("Cluster center : ",centerc)
+	print("Cluster labels : ",labels)
+	print('Prediction on (',len(test),' test data) - output refered to cluster number: ',y_pred)
 	def ClusterIndicesNumpy(clustNum, labels_array):
 		return np.where(labels == clustNum)[0]
-	clusterindex = [ClusterIndicesNumpy(v, clf.labels_) for v in range(6)]
-	clustergrouping = [[scluster for scluster in clusterindex[iterclus]] for iterclus in range(6)]
-	print(clustergrouping)
+	clusterindex = [ClusterIndicesNumpy(v, clf.labels_) for v in range(clusternum)]
+	
+	clustergrouping = [[scluster for scluster in clusterindex[iterclus]] for iterclus in range(clusternum)]
+	print(clusternum," Cluster row: ",clustergrouping)
+	clustergrouping2 = [[ Y[scluster] for scluster in clusterindex[iterclus]] for iterclus in range(clusternum)]
+	print(clusternum," Cluster Group: ",clustergrouping2)
 	# print('Actual value : ',accuracy_score(labels_test, y_pred))
 	# y_pred = KMeans(n_clusters=2, random_state=random_state).fit_predict(X)
 	# plt.subplot(221)
