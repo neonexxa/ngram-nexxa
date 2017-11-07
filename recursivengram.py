@@ -37,7 +37,7 @@ def ngrams(maininput, n):
 
 
 def getfile(PATH,graminput,byyear,vline):
-    print(byyear)
+    # print(byyear)
     if (byyear):
         with open(PATH, 'r') as f:
             line = f.readlines()
