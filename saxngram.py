@@ -29,6 +29,7 @@ if(args["year"] == "byyear"):
 			for x in range(len(loc)):
 				print (loc[x].upper())
 				PATH = 'rawSAX/'+loc[x].upper()+'/'+datasettype[y]+loc[x]+'.txt'
+                print(PATH)
 				rngm.getfile(PATH,graminput,byyear)
 	elif (args["type"] == "location"):
 		print ("============================================================")
@@ -125,9 +126,9 @@ if(args["year"] == "byyear"):
 				# print("e_c : "+str(e_c))
 				# print("e_d : "+str(e_d))
 				# print("e_e : "+str(e_e))
-				text_file = open('rawSAX/'+loc[y].upper()+tot+loc[y].upper()+".txt", "a")
-				text_file.write(str(a_b)+" "+str(a_c)+" "+str(b_a)+" "+str(b_b)+" "+str(b_c)+" "+str(b_d)+" "+str(b_e)+" "+str(c_a)+" "+str(c_b)+" "+str(c_c)+" "+str(c_d)+" "+str(c_e)+" "+str(d_b)+" "+str(d_c)+" "+str(d_d)+" "+str(d_e)+" "+str(e_b)+" "+str(e_c)+" "+str(e_d)+" "+str(e_e)+"\n")
-				text_file.close()
+# 				text_file = open('rawSAX/'+loc[y].upper()+tot+loc[y].upper()+".txt", "a")
+# 				text_file.write(str(a_b)+" "+str(a_c)+" "+str(b_a)+" "+str(b_b)+" "+str(b_c)+" "+str(b_d)+" "+str(b_e)+" "+str(c_a)+" "+str(c_b)+" "+str(c_c)+" "+str(c_d)+" "+str(c_e)+" "+str(d_b)+" "+str(d_c)+" "+str(d_d)+" "+str(d_e)+" "+str(e_b)+" "+str(e_c)+" "+str(e_d)+" "+str(e_e)+"\n")
+# 				text_file.close()
 	elif (args["type"] == "specific"):
 		col = args["specific"][:2]
 		loct = args["specific"][2:]
@@ -141,7 +142,7 @@ if(args["year"] == "byyear"):
 	elif (args["type"] == "corrosion"):
 		PATH = 'sss/ef'+args["corrosion"]+'.txt'
 		filename = open(PATH)
-   		filesize=sum(1 for _ in filename)
+#    		filesize=sum(1 for _ in filename)
 		print(PATH,filesize)
 		storagekey = []
 		for v in range(filesize):
@@ -151,9 +152,9 @@ if(args["year"] == "byyear"):
 		# data = json.loads(storagekey)
 		# print(storagekey)
 		# print label
-		text_file = open('sss/ngram_'+args["corrosion"]+".txt", "a")
-		text_file.write("a_b a_c b_a b_b b_c b_d c_a c_b c_c c_d c_e d_b d_c d_d d_e e_b e_c e_d e_e\n")
-		text_file.close()
+# 		text_file = open('sss/ngram_'+args["corrosion"]+".txt", "a")
+# 		text_file.write("a_b a_c b_a b_b b_c b_d c_a c_b c_c c_d c_e d_b d_c d_d d_e e_b e_c e_d e_e\n")
+# 		text_file.close()
 		# end print label
 
 		for x in range(filesize):
@@ -200,9 +201,9 @@ if(args["year"] == "byyear"):
 			if 'e e' in data:
 				e_e += data['e e']
 			print(data)
-			text_file = open('sss/ngram_'+args["corrosion"]+".txt", "a")
-			text_file.write(str(a_b)+" "+str(a_c)+" "+str(b_a)+" "+str(b_b)+" "+str(b_c)+" "+str(b_d)+" "+str(b_e)+" "+str(c_a)+" "+str(c_b)+" "+str(c_c)+" "+str(c_d)+" "+str(c_e)+" "+str(d_b)+" "+str(d_c)+" "+str(d_d)+" "+str(d_e)+" "+str(e_b)+" "+str(e_c)+" "+str(e_d)+" "+str(e_e)+"\n")
-			text_file.close()
+# 			text_file = open('sss/ngram_'+args["corrosion"]+".txt", "a")
+# 			text_file.write(str(a_b)+" "+str(a_c)+" "+str(b_a)+" "+str(b_b)+" "+str(b_c)+" "+str(b_d)+" "+str(b_e)+" "+str(c_a)+" "+str(c_b)+" "+str(c_c)+" "+str(c_d)+" "+str(c_e)+" "+str(d_b)+" "+str(d_c)+" "+str(d_d)+" "+str(d_e)+" "+str(e_b)+" "+str(e_c)+" "+str(e_d)+" "+str(e_e)+"\n")
+# 			text_file.close()
 else:
 	if (args["type"] == "collection"):
 		print ("============================================================")
